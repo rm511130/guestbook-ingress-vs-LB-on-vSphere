@@ -1,0 +1,51 @@
+apiVersion: extensions/v1beta1
+kind: NetworkPolicy
+metadata:
+ name: gb-external-frontend
+ namespace: guestbook
+spec:
+ podSelector:
+  matchLabels:
+    tier: frontend
+ ingress:
+  - from:
+    ports:
+    - protocol: TCP
+      port: 80
+---
+apiVersion: extensions/v1beta1
+kind: NetworkPolicy
+metadata:
+ name: gb-frontend-backend
+ namespace: guestbook
+spec:
+ podSelector:
+  matchLabels:
+    tier: backend
+ ingress:
+  - from:
+     - podSelector:
+        matchLabels:
+          tier: frontend
+          app: guestbook
+    ports:
+     - protocol: TCP
+       port: 6379
+---
+apiVersion: extensions/v1beta1
+kind: NetworkPolicy
+metadata:
+ name: gb-backend-backend
+ namespace: guestbook
+spec:
+ podSelector:
+  matchLabels:
+    tier: backend
+ ingress:
+  - from:
+     - podSelector:
+        matchLabels:
+          tier: backend
+    ports:
+     - protocol: TCP
+       port: 6379

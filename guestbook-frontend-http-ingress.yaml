@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: guestbook
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: guestbook
+    tier: frontend
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: guestbook-ingress
+  namespace: guestbook
+spec:
+  rules:
+  - host: guestbook.app.vdoubleb.lan
+    http:
+      paths:
+      - path:
+        backend:
+          serviceName: frontend
+          servicePort: 80

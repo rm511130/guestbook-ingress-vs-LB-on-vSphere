@@ -154,6 +154,8 @@ redis-master-claim   Bound    pvc-adff9d84-89a6-4e2c-a00c-a124ec248ac7   2Gi    
 redis-slave-claim    Bound    pvc-56dcd1f2-f6b3-480a-9fa0-22febcd01c18   2Gi        RWO            thin-disk      7s
 ```
 
+![](./images/kubectl-apply-pvc-in-vcsa.png)
+
 #### 5. Let's Create the GuestBook App
 
 ```

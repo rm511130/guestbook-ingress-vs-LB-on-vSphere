@@ -217,9 +217,9 @@ $ kubectl get service -n guestbook
 ```
 ```python
 NAME           TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)        AGE
-frontend       LoadBalancer   10.100.200.178   10.195.11.153   80:31542/TCP   12s
-redis-master   ClusterIP      10.100.200.193   <none>          6379/TCP       11m
-redis-slave    ClusterIP      10.100.200.81    <none>          6379/TCP       11m
+frontend       LoadBalancer   10.100.200.42    10.195.11.137   80:30596/TCP   39s
+redis-master   ClusterIP      10.100.200.86    <none>          6379/TCP       7m28s
+redis-slave    ClusterIP      10.100.200.226   <none>          6379/TCP       7m28s
 ```
 ![](./images/GG1.png)
 

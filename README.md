@@ -1,17 +1,48 @@
-# Demo 1
+# GuestBook App & Understanding Ingress vs. Load Balancer on vSphere
 
 ## Pre-requisites:
 
 - You have access to a TKGI (PKS) environment deployed on vSphere using NSX-T
-- You have access to a `small` cluster on this TKGI (PKS) environment
-- The `small` cluster has not been used for any purpose and does not have a storage-class defined
+- The TKGI (PKS) environment has at least one `plan` (which in our example will be the `small` plan)
 
 ## Demo Steps
 
-1. First we log into your PKS environment as a `pks_admin` user. We find that we already have a `small` cluster provisioned.
+1. First we log into your PKS environment as a `pks_admin` user and create a `small` cluster:
 
 ```
 $ pks login -a https://api.run.haas-257.pez.pivotal.io -p password -k -u pks_admin
+```
+
+- What does NSX-T Manager look like before we create the `small` cluster:
+
+![](./images/NSXT-A01.png)
+![](./images/NSXT-A02.png)
+![](./images/NSXT-A03.png)
+![](./images/NSXT-A04.png)
+
+- Let's create the `small` cluster. Note the UUID: `e2a0e555-e6f2-45b0-8073-23b9e1f7c2121`
+
+```
+$ pks create-cluster small --plan small --num-nodes 1 -e small.run.haas-257.pez.pivotal.io
+```
+```python
+PKS Version:              1.7.0-build.26
+Name:                     small
+K8s Version:              1.16.7
+Plan Name:                small
+UUID:                     e2a0e555-e6f2-45b0-8073-23b9e1f7c212
+Last Action:              CREATE
+Last Action State:        in progress
+Last Action Description:  Creating cluster
+Kubernetes Master Host:   small.run.haas-257.pez.pivotal.io
+Kubernetes Master Port:   8443
+Worker Nodes:             1
+Kubernetes Master IP(s):  In Progress
+Network Profile Name:     
+```
+- After about 8 minutes, we have a `small` cluster with a simgle `Master Node` at `10.195.11.128`:
+
+```
 $ pks cluster small
 ```
 ```python
@@ -19,7 +50,7 @@ PKS Version:              1.7.0-build.26
 Name:                     small
 K8s Version:              1.16.7
 Plan Name:                small
-UUID:                     994b5956-15d2-4fbb-b791-a5624e3347bb
+UUID:                     e2a0e555-e6f2-45b0-8073-23b9e1f7c212
 Last Action:              CREATE
 Last Action State:        succeeded
 Last Action Description:  Instance provisioning completed
@@ -29,14 +60,11 @@ Worker Nodes:             1
 Kubernetes Master IP(s):  10.195.11.128
 Network Profile Name:
 ```
-```
-$ pks get-credentials small
-$ kubectl cluster-info
-```
-```python
-Kubernetes master is running at https://small.run.haas-257.pez.pivotal.io:8443
-CoreDNS is running at https://small.run.haas-257.pez.pivotal.io:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-```
+- Let's take a look at what's new in the NSX Manager GUI:
+
+![](./images/NSXT-B01.png)
+![](./images/NSXT-B02.png)
+
 
 2. We clone [this](https://github.com/rm511130/guestbook-ingress-vs-LB-on-vSphere) repo on a MacBook:
 
@@ -165,6 +193,31 @@ redis-master   ClusterIP      10.100.200.193   <none>          6379/TCP       11
 redis-slave    ClusterIP      10.100.200.81    <none>          6379/TCP       11m
 ```
 ![](./images/GG1.png)
+
+8. Let's take a look at what happened on the NSX-T end:
+
+- The following command tells us that the UUID of the `small` cluster is `994b...`.
+
+```
+pks cluster small
+```
+```python
+PKS Version:              1.7.0-build.26
+Name:                     small
+K8s Version:              1.16.7
+Plan Name:                small
+UUID:                     994b5956-15d2-4fbb-b791-a5624e3347bb
+Last Action:              CREATE
+Last Action State:        succeeded
+Last Action Description:  Instance provisioning completed
+Kubernetes Master Host:   small.run.haas-257.pez.pivotal.io
+Kubernetes Master Port:   8443
+Worker Nodes:             1
+Kubernetes Master IP(s):  10.195.11.128
+Network Profile Name:
+```
+- 
+
 
 
 

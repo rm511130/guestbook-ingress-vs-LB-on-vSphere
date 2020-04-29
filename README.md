@@ -14,7 +14,7 @@
 pks login -a https://api.run.haas-257.pez.pivotal.io -p password -k -u pks_admin
 pks cluster small
 ```
-```javascript
+```python
 PKS Version:              1.7.0-build.26
 Name:                     small
 K8s Version:              1.16.7

@@ -89,9 +89,8 @@ kubectl apply -f 03-guestbook-redis-master-claim.yaml
 ```
 kubectl apply -f 04-guestbook-redis-slave-claim.yaml
 ```
-```python
-> persistentvolumeclaim/redis-slave-claim created
-```
+`persistentvolumeclaim/redis-slave-claim created`
+
 
 
 # Guestbook Kubernetes Deployment

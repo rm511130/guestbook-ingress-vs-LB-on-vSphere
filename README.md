@@ -7,7 +7,7 @@
 
 ## Demo Steps
 
-# 1. First we log into your PKS environment as a `pks_admin` user and create a `small` cluster:
+### 1. First we log into your PKS environment as a `pks_admin` user and create a `small` cluster:
 
 ```
 $ pks login -a https://api.run.haas-257.pez.pivotal.io -p password -k -u pks_admin
@@ -66,7 +66,7 @@ Network Profile Name:
 ![](./images/NSXT-B02.png)
 
 
-# 2. We clone [this](https://github.com/rm511130/guestbook-ingress-vs-LB-on-vSphere) repo on a MacBook:
+### 2. We clone [this](https://github.com/rm511130/guestbook-ingress-vs-LB-on-vSphere) repo on a MacBook:
 
 ```
 $ cd /work
@@ -74,7 +74,7 @@ $ git clone https://github.com/rm511130/guestbook-ingress-vs-LB-on-vSphere
 $ cd guestbook-ingress-vs-LB-on-vSphere
 ```
 
-# 3. Let's check that there isn't a storage class and then let's create one:
+### 3. Let's check that there isn't a storage class and then let's create one:
 
 ```
 $ kubectl get sc
@@ -100,7 +100,7 @@ VolumeBindingMode:     Immediate
 Events:                <none>
 ```
 
-# 4. Create a `GuestBook` Namespace, a Redis Master and a Redis Slave Volume Claim:
+### 4. Create a `GuestBook` Namespace, a Redis Master and a Redis Slave Volume Claim:
 
 ```
 $ kubectl apply -f 02-guestbook-namespace.yaml
@@ -129,7 +129,7 @@ redis-master-claim   Bound    pvc-17061722-d81f-49b7-a125-2c758e48ee99   2Gi    
 redis-slave-claim    Bound    pvc-9a45b97e-027b-45a6-a3bb-8cf8a5218931   2Gi        RWO            thin-disk      7m35s
 ```
 
-# 5. Let's Create the GuestBook App
+### 5. Let's Create the GuestBook App
 
 ```
 $ kubectl apply -f 05-guestbook-app-base.yaml 
@@ -142,7 +142,7 @@ service/redis-slave created
 deployment.apps/frontend created
 ```
 
-# 6. So what do we have up and running so far?
+### 6. So what do we have up and running so far?
 
 ```
 $ kubectl get all -n guestbook
@@ -175,7 +175,7 @@ replicaset.apps/redis-master-8bfb75f8d   1         1         1       3m33s
 replicaset.apps/redis-slave-779b6d8f79   1         1         1       3m32s
 ```
 
-# 7. In order to use the front-end App, let's  expose it using a LoadBalancer service type:
+### 7. In order to use the front-end App, let's  expose it using a LoadBalancer service type:
 
 ```
 $ kubectl apply -f 06-guestbook-frontend-svc-lb.yaml 
@@ -194,7 +194,7 @@ redis-slave    ClusterIP      10.100.200.81    <none>          6379/TCP       11
 ```
 ![](./images/GG1.png)
 
-# 8. Let's take a look at what happened on the NSX-T end:
+### 8. Let's take a look at what happened on the NSX-T end:
 
 - The following command tells us that the UUID of the `small` cluster is `994b...`.
 

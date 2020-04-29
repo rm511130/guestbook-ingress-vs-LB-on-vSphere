@@ -88,7 +88,7 @@ $ git clone https://github.com/rm511130/guestbook-ingress-vs-LB-on-vSphere
 $ cd guestbook-ingress-vs-LB-on-vSphere
 ```
 
-#### 3. Let's check that there isn't a storage class and then let's create one:
+#### 3. Let's check whether there is a Storage Class:
 
 ```
 $ kubectl get sc
@@ -114,7 +114,7 @@ VolumeBindingMode:     Immediate
 Events:                <none>
 ```
 
-#### 4. Create a `GuestBook` Namespace, a Redis Master and a Redis Slave Volume Claim:
+#### 4. Create a `GuestBook` Namespace, Persistent Volume Claims for a Redis Master and a Redis Slave:
 
 ```
 $ kubectl apply -f 02-guestbook-namespace.yaml
@@ -139,8 +139,8 @@ $ kubectl get pvc -n guestbook
 ```
 ```python
 NAME                 STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-redis-master-claim   Bound    pvc-17061722-d81f-49b7-a125-2c758e48ee99   2Gi        RWO            thin-disk      8m57s
-redis-slave-claim    Bound    pvc-9a45b97e-027b-45a6-a3bb-8cf8a5218931   2Gi        RWO            thin-disk      7m35s
+redis-master-claim   Bound    pvc-adff9d84-89a6-4e2c-a00c-a124ec248ac7   2Gi        RWO            thin-disk      28s
+redis-slave-claim    Bound    pvc-56dcd1f2-f6b3-480a-9fa0-22febcd01c18   2Gi        RWO            thin-disk      7s
 ```
 
 #### 5. Let's Create the GuestBook App

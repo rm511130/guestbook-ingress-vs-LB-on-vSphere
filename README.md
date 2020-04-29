@@ -169,6 +169,8 @@ service/redis-slave created
 deployment.apps/frontend created
 ```
 
+![](./images/VCSA-disks-have-size.png)
+
 #### 6. So what do we have up and running so far?
 
 ```

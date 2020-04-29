@@ -78,19 +78,19 @@ Events:                <none>
 kubectl apply -f 02-guestbook-namespace.yaml
 ```
 ```python
-namespace/guestbook created
+> namespace/guestbook created
 ```
 ```
 kubectl apply -f 03-guestbook-redis-master-claim.yaml
 ```
 ```python
-persistentvolumeclaim/redis-master-claim created
+> persistentvolumeclaim/redis-master-claim created
 ```
 ```
 kubectl apply -f 04-guestbook-redis-slave-claim.yaml
 ```
 ```python
-persistentvolumeclaim/redis-slave-claim created
+> persistentvolumeclaim/redis-slave-claim created
 ```
 
 

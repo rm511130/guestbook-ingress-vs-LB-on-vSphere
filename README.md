@@ -33,7 +33,7 @@ Network Profile Name:
 pks get-credentials small
 kubectl cluster-info
 ```
-```
+```python
 Kubernetes master is running at https://small.run.haas-257.pez.pivotal.io:8443
 CoreDNS is running at https://small.run.haas-257.pez.pivotal.io:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 ```
@@ -50,15 +50,15 @@ cd guestbook-ingress-vs-LB-on-vSphere
 
 ```
 kubectl get sc
-kubectl apply -f thin-storageclass.yaml
+kubectl apply -f 01-thin-storageclass.yaml
 ```
-```
+```python
 storageclass.storage.k8s.io/thin-disk created
 ```
 ```
 kubectl describe sc thin-disk
 ```
-```
+```python
 Name:            thin-disk
 IsDefaultClass:  Yes
 Annotations:     kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"storage.k8s.io/v1","kind":"StorageClass","metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"true"},"name":"thin-disk"},"parameters":{"diskformat":"thin"},"provisioner":"kubernetes.io/vsphere-volume"}
@@ -72,8 +72,26 @@ VolumeBindingMode:     Immediate
 Events:                <none>
 ```
 
-4. 
+4. Create a `GuestBook` Namespace, a Redis Master and a Redis Slave Volume Claim:
 
+```
+kubectl apply -f 02-guestbook-namespace.yaml
+```
+```python
+namespace/guestbook created
+```
+```
+kubectl apply -f 03-guestbook-redis-master-claim.yaml
+```
+```python
+persistentvolumeclaim/redis-master-claim created
+```
+```
+kubectl apply -f 04-guestbook-redis-slave-claim.yaml
+```
+```python
+persistentvolumeclaim/redis-slave-claim created
+```
 
 
 # Guestbook Kubernetes Deployment

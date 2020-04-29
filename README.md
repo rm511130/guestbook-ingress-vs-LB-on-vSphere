@@ -221,7 +221,7 @@ frontend       LoadBalancer   10.100.200.42    10.195.11.137   80:30596/TCP   39
 redis-master   ClusterIP      10.100.200.86    <none>          6379/TCP       7m28s
 redis-slave    ClusterIP      10.100.200.226   <none>          6379/TCP       7m28s
 ```
-![](./images/GG1.png)
+![](./images/GG2.png)
 
 #### 8. Let's take a look at what happened on the NSX-T end:
 

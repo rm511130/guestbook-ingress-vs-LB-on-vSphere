@@ -14,9 +14,9 @@
 pks login -a https://api.run.haas-257.pez.pivotal.io -p password -k -u pks_admin
 pks cluster small
 ```
-```
-> PKS Version:              1.7.0-build.26
-> Name:                     small
+```javascript
+PKS Version:              1.7.0-build.26
+Name:                     small
 K8s Version:              1.16.7
 Plan Name:                small
 UUID:                     994b5956-15d2-4fbb-b791-a5624e3347bb

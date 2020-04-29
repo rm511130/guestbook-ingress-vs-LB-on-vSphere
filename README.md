@@ -11,8 +11,8 @@
 1. First we log into your PKS environment as a `pks_admin` user. We find that we already have a `small` cluster provisioned.
 
 ```
-pks login -a https://api.run.haas-257.pez.pivotal.io -p password -k -u pks_admin
-pks cluster small
+$ pks login -a https://api.run.haas-257.pez.pivotal.io -p password -k -u pks_admin
+$ pks cluster small
 ```
 ```python
 PKS Version:              1.7.0-build.26
@@ -30,8 +30,8 @@ Kubernetes Master IP(s):  10.195.11.128
 Network Profile Name:
 ```
 ```
-pks get-credentials small
-kubectl cluster-info
+$ pks get-credentials small
+$ kubectl cluster-info
 ```
 ```python
 Kubernetes master is running at https://small.run.haas-257.pez.pivotal.io:8443
@@ -41,22 +41,22 @@ CoreDNS is running at https://small.run.haas-257.pez.pivotal.io:8443/api/v1/name
 2. We clone [this](https://github.com/rm511130/guestbook-ingress-vs-LB-on-vSphere) repo on a MacBook:
 
 ```
-cd /work
-git clone https://github.com/rm511130/guestbook-ingress-vs-LB-on-vSphere
-cd guestbook-ingress-vs-LB-on-vSphere
+$ cd /work
+$ git clone https://github.com/rm511130/guestbook-ingress-vs-LB-on-vSphere
+$ cd guestbook-ingress-vs-LB-on-vSphere
 ```
 
 3. Let's check that there isn't a storage class and then let's create one:
 
 ```
-kubectl get sc
-kubectl apply -f 01-thin-storageclass.yaml
+$ kubectl get sc
+$ kubectl apply -f 01-thin-storageclass.yaml
 ```
 ```python
 storageclass.storage.k8s.io/thin-disk created
 ```
 ```
-kubectl describe sc thin-disk
+$ kubectl describe sc thin-disk
 ```
 ```python
 Name:            thin-disk
@@ -75,21 +75,98 @@ Events:                <none>
 4. Create a `GuestBook` Namespace, a Redis Master and a Redis Slave Volume Claim:
 
 ```
-kubectl apply -f 02-guestbook-namespace.yaml
+$ kubectl apply -f 02-guestbook-namespace.yaml
+```
+```
+namespace/guestbook created
+```
+```
+$ kubectl apply -f 03-guestbook-redis-master-claim.yaml
+```
+```
+persistentvolumeclaim/redis-master-claim created
+```
+```
+$ kubectl apply -f 04-guestbook-redis-slave-claim.yaml
+```
+```
+persistentvolumeclaim/redis-slave-claim created
+```
+```
+$ kubectl get pvc -n guestbook 
 ```
 ```python
-> namespace/guestbook created
+NAME                 STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+redis-master-claim   Bound    pvc-17061722-d81f-49b7-a125-2c758e48ee99   2Gi        RWO            thin-disk      8m57s
+redis-slave-claim    Bound    pvc-9a45b97e-027b-45a6-a3bb-8cf8a5218931   2Gi        RWO            thin-disk      7m35s
 ```
+
+5. Let's Create the GuestBook App
+
 ```
-kubectl apply -f 03-guestbook-redis-master-claim.yaml
+$ kubectl apply -f 05-guestbook-app-base.yaml 
 ```
 ```python
-> persistentvolumeclaim/redis-master-claim created
+deployment.apps/redis-master created
+service/redis-master created
+deployment.apps/redis-slave created
+service/redis-slave created
+deployment.apps/frontend created
+```
+
+6. So what do we have up and running so far?
+
+```
+$ kubectl get all -n guestbook
+```
+
+- The results shown below indicate that we have a Redis Master exposed as a service, a Redis Slave exposed as a service, 3 Front-end pods, plus a few deployments and replicasets.
+
+```python
+NAME                               READY   STATUS    RESTARTS   AGE
+pod/frontend-6cb7f8bd65-fmcpg      1/1     Running   0          3m30s
+pod/frontend-6cb7f8bd65-hthqx      1/1     Running   0          3m30s
+pod/frontend-6cb7f8bd65-wlpfg      1/1     Running   0          3m30s
+pod/redis-master-8bfb75f8d-9tvks   1/1     Running   0          3m32s
+pod/redis-slave-779b6d8f79-mfx84   1/1     Running   0          3m31s
+
+
+NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+service/redis-master   ClusterIP   10.100.200.193   <none>        6379/TCP   3m31s
+service/redis-slave    ClusterIP   10.100.200.81    <none>        6379/TCP   3m31s
+
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/frontend       3/3     3            3           3m30s
+deployment.apps/redis-master   1/1     1            1           3m32s
+deployment.apps/redis-slave    1/1     1            1           3m31s
+
+NAME                                     DESIRED   CURRENT   READY   AGE
+replicaset.apps/frontend-6cb7f8bd65      3         3         3       3m31s
+replicaset.apps/redis-master-8bfb75f8d   1         1         1       3m33s
+replicaset.apps/redis-slave-779b6d8f79   1         1         1       3m32s
+```
+
+7. In order to use the front-end App, let's  expose it using a LoadBalancer service type:
+
+```
+$ kubectl apply -f 06-guestbook-frontend-svc-lb.yaml 
+```
+```python
+service/frontend created
 ```
 ```
-kubectl apply -f 04-guestbook-redis-slave-claim.yaml
+$ kubectl get service -n guestbook 
 ```
-`persistentvolumeclaim/redis-slave-claim created`
+```python
+NAME           TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)        AGE
+frontend       LoadBalancer   10.100.200.178   10.195.11.153   80:31542/TCP   12s
+redis-master   ClusterIP      10.100.200.193   <none>          6379/TCP       11m
+redis-slave    ClusterIP      10.100.200.81    <none>          6379/TCP       11m
+```
+![](./images/GG1.png)
+
+
 
 
 

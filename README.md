@@ -73,14 +73,19 @@ Network Profile Name:
 
 ```
 $ pks get-credentials small
+```
+
+- And now we see a few more objects in the NSX-Manager GUI:
+
+![](./images/NSXT-Namespaces-and-Switches.png)
+
+```
 $ kubectl cluster-info
 ```
 ```python
 Kubernetes master is running at https://small.run.haas-257.pez.pivotal.io:8443
 CoreDNS is running at https://small.run.haas-257.pez.pivotal.io:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 ```
-
-![](./images/NSXT-Namespaces-and-Switches.png)
 
 #### 2. We clone [this](https://github.com/rm511130/guestbook-ingress-vs-LB-on-vSphere) repo on a MacBook:
 
@@ -124,6 +129,10 @@ $ kubectl apply -f 02-guestbook-namespace.yaml
 ```
 namespace/guestbook created
 ```
+
+![](./images/After-NS-Guestbook-has-been-created.png)
+
+
 ```
 $ kubectl apply -f 03-guestbook-redis-master-claim.yaml
 ```
